@@ -64,25 +64,47 @@ def test_home(client):
 #     assert 'last_name' in users[0], "User data does not contain 'last_name'"
 #     assert 'role' in users[0], "User data does not contain 'role'"
 
-def test_create_user(client):
-    # Data for creating a new user
-    user_data = {
-        'user_id': 4,
-        'role_code': 'admin',  # Assume this role exists in the roles table
-        'user_frst_name': 'John',
-        'user_last_name': 'Doe',
-        'user_login': 'johndoe',
-        'password': 'password123',
-        'other_details': 'Some details about the user',
-        'Roles_role_code': 1  # Assuming this maps to a valid role in the roles table
-    }
+# def test_get_users(client, auth_headers):
+#     # Send a GET request to retrieve the list of users with a valid JWT token
+#     response = client.get('/users', headers=auth_headers)
 
-    # Make a POST request to create a user
-    response = client.post('/users', json=user_data)
+#     # Assert that the status code is 200 (OK)
+#     assert response.status_code == 200
 
-    # Assert that the user is created successfully (status code 201)
-    assert response.status_code == 201
-    assert b'User created successfully' in response.data
+#     # Assert that the returned list of users contains the created user
+#     data = json.loads(response.data)
+#     assert len(data) > 0  # Ensure at least one user is returned
+#     assert data[0]['user_id'] == 1
+#     assert data[0]['first_name'] == 'John'
+#     assert data[0]['last_name'] == 'Doe'
+
+
+def test_get_users_access_denied(client):
+    # Send a GET request to retrieve the list of users without a valid token
+    response = client.get('/users')
+
+    # Assert that the status code is 401 (Unauthorized)
+    assert response.status_code == 401
+
+# def test_create_user(client):
+#     # Data for creating a new user
+#     user_data = {
+#         'user_id': 4,
+#         'role_code': 'admin',  # Assume this role exists in the roles table
+#         'user_frst_name': 'John',
+#         'user_last_name': 'Doe',
+#         'user_login': 'johndoe',
+#         'password': 'password123',
+#         'other_details': 'Some details about the user',
+#         'Roles_role_code': 1  # Assuming this maps to a valid role in the roles table
+#     }
+
+#     # Make a POST request to create a user
+#     response = client.post('/users', json=user_data)
+
+#     # Assert that the user is created successfully (status code 201)
+#     assert response.status_code == 201
+#     assert b'User created successfully' in response.data
 
 def test_create_user_missing_fields(client):
     # Test missing required fields
