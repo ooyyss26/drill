@@ -47,6 +47,22 @@ def register_error_handlers(app):
     def server_error(e):
         return jsonify({'error': 'Internal server error'}), 500
 
+    @app.route('/login', methods=['POST'])
+    def login():
+        data = request.get_json()
+
+        # Assume we check user credentials here
+        username = data.get('username')
+        password = data.get('password')
+
+        # In a real app, you would validate the user against the database
+        if username == 'admin' and password == 'admin':
+            access_token = create_access_token(identity=username, additional_claims={'role': 'admin'})
+            return jsonify(access_token=access_token), 200
+        else:
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+
 class Facility(db.Model):
     __tablename__ = 'facilities'
 
