@@ -136,6 +136,23 @@ def register_error_handlers(app):
         except Exception as e:
             return jsonify({'error': str(e)}), 400
 
+    @app.route('/users/<int:user_id>', methods=['PUT'])
+    def update_user(user_id):
+        data = request.get_json()
+        user = db.session.get(User, user_id)
+        
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        user.user_frst_name = data.get('user_frst_name', user.user_frst_name)
+        user.user_last_name = data.get('user_last_name', user.user_last_name)
+        user.user_login = data.get('user_login', user.user_login)
+        user.password = data.get('password', user.password)
+        user.other_details = data.get('other_details', user.other_details)
+        user.role_code = data.get('role_code', user.role_code)  # Assuming you might want to update the role_code
+
+        db.session.commit()
+        return jsonify({'message': 'User updated successfully'})
 
 
 
