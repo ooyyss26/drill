@@ -62,6 +62,43 @@ def register_error_handlers(app):
         else:
             return jsonify({'error': 'Invalid credentials'}), 401
 
+    @app.route('/users', methods=['GET'])
+    @jwt_required()
+    def get_users():
+        claims = get_jwt()  # Get the full claims from the JWT
+        if claims.get('role') != 'admin':
+            return jsonify({'error': 'Access forbidden: You do not have the required role'}), 403
+
+        users = User.query.all()
+        return jsonify([{
+            'user_id': u.user_id,
+            'first_name': u.user_frst_name,
+            'last_name': u.user_last_name,
+            'login': u.user_login,
+            'role': u.role.role_description
+        } for u in users])
+    
+    @app.route('/users/<int:user_id>', methods=['GET'])
+    @jwt_required()
+    def get_user(user_id):
+        claims = get_jwt()  # Get the full claims from the JWT
+        if claims.get('role') != 'admin':
+            return jsonify({'error': 'Access forbidden: You do not have the required role'}), 403
+
+        # Retrieve the user by ID
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        return jsonify({
+            'user_id': user.user_id,
+            'first_name': user.user_frst_name,
+            'last_name': user.user_last_name,
+            'login': user.user_login,
+            'role': user.role.role_description
+        })
+
+
 
 class Facility(db.Model):
     __tablename__ = 'facilities'
