@@ -10,7 +10,7 @@ def create_app(config=None):
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:zyradnghl@localhost/access_control'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a more secure secret
+    app.config['JWT_SECRET_KEY'] = 'your-secret-key'
 
     if config:
         app.config.update(config)
@@ -26,3 +26,13 @@ def create_app(config=None):
 
     return app
 
+# Register routes
+def register_routes(app):
+    @app.route('/')
+    def home():
+        return jsonify({
+            'message': 'Users Access Control',
+            'endpoints': {
+                '/users': 'Manage users',
+            }
+        })
