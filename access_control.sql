@@ -172,7 +172,7 @@ DROP TABLE IF EXISTS `roles`;
 CREATE TABLE `roles` (
   `role_code` int NOT NULL,
   `role_description` varchar(45) NOT NULL,
-  `eg DBA, Project Mgr` varchar(45) NOT NULL,
+  `role_name` varchar(45) NOT NULL,
   PRIMARY KEY (`role_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
