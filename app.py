@@ -166,8 +166,6 @@ def register_error_handlers(app):
         db.session.commit()
         return jsonify({'message': 'User and related access rights deleted successfully'})
 
-
-
 class Facility(db.Model):
     __tablename__ = 'facilities'
 
@@ -233,7 +231,7 @@ class Role(db.Model):
 
     role_code = db.Column(db.Integer, primary_key=True)
     role_description = db.Column(db.String(45), nullable=False)
-    eg_DBA_Project_Mgr = db.Column(db.String(45), nullable=False)
+    role_name = db.Column(db.String(45), nullable=False)
 
 
 class User(db.Model):
