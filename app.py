@@ -154,6 +154,18 @@ def register_error_handlers(app):
         db.session.commit()
         return jsonify({'message': 'User updated successfully'})
 
+    @app.route('/users/<int:user_id>', methods=['DELETE'])
+    def delete_user(user_id):
+        user = db.session.get(User, user_id)
+        
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+
+        # Now delete the user
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User and related access rights deleted successfully'})
+
 
 
 class Facility(db.Model):
