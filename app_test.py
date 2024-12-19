@@ -97,7 +97,7 @@ def test_update_user(client):
 
 # Test for deleting an account
 def test_delete_user(client):
-    response = client.delete('/users/3')
+    response = client.delete('/users/4')
     json_data = response.get_json()
     assert response.status_code == 200
     assert json_data['message'] == 'User and related access rights deleted successfully'
