@@ -97,6 +97,45 @@ def register_error_handlers(app):
             'login': user.user_login,
             'role': user.role.role_description
         })
+    
+    @app.route('/users', methods=['POST'])
+    def create_user():
+        data = request.get_json()
+
+        # List of required fields
+        required_fields = [
+            'user_id', 'role_code', 'user_frst_name', 
+            'user_last_name', 'user_login', 'password', 
+            'other_details', 'Roles_role_code'
+        ]
+
+        # Check if any required field is missing
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return jsonify({'error': f'Missing field(s): {", ".join(missing_fields)}'}), 400
+
+        try:
+            new_user = User(
+                user_id=data['user_id'],
+                role_code=data['role_code'],
+                user_frst_name=data['user_frst_name'],
+                user_last_name=data['user_last_name'],
+                user_login=data['user_login'],
+                password=data['password'],
+                other_details=data['other_details'],
+                Roles_role_code=data['Roles_role_code']
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+            return jsonify({'message': 'User created successfully'}), 201
+        
+        except IntegrityError:
+            db.session.rollback()
+            return jsonify({'error': 'Database integrity error. Ensure foreign key references and unique constraints are satisfied.'}), 400
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400
+
 
 
 
